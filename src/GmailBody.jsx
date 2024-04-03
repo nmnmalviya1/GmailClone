@@ -20,7 +20,7 @@ function GmailBody({params}){
 
     switch(component){
       case 'inbox':
-        data = <Demo/>
+        data = <Inbox/>
         break;
       case 'sent': 
         data = <SentMail/>

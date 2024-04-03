@@ -19,6 +19,32 @@ function Inbox(){
       const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
       return `${formattedHours}:${formattedMinutes} ${meridiem}`;
     }
+
+    const deleteMail = async (messageId) => {
+      try {
+        let token = localStorage.getItem("Token");
+        console.log(token)
+        const response = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}`, {
+              method: 'DELETE',
+              headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              }
+          });
+          if (response.ok) {
+              console.log("Email deleted successfully");
+              // Update your application state or perform any other action after successful deletion
+          } else {
+              console.error("Failed to delete email:", response);
+              // Handle the error appropriately
+          }
+      } catch (error) {
+          console.error("Error deleting email:", error);
+          // Handle any network errors or other exceptions
+      }
+  };
+  
+
     return(
 <>
 {console.log("Data is ",data)}
@@ -43,7 +69,7 @@ function Inbox(){
 </button>
 
 <div class="message-default" >
-
+  {console.log("value is = ",value)}
   <div class="message-sender message-content unread" >
     <span >{value.payload.headers.find(item=>item.name == "From").value}</span>
   </div>
@@ -72,7 +98,7 @@ function Inbox(){
       <img src={archive_black_24dp} alt="Archive" class="btn-icon-sm btn-icon-alt btn-icon-hover" />
     </button>
 
-    <button class="btn">
+    <button class="btn" onClick={()=>deleteMail(value.id)}>
       <img src={delete_black_24dp} alt="Delete" class="btn-icon-sm btn-icon-alt btn-icon-hover" />
     </button>
 
